@@ -313,4 +313,16 @@ public class TestDefaultHostnameVerifier {
         }
     }
 
+
+    @Test
+    public void testSubjectAltEmailOnly() throws Exception {
+        final CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        final InputStream in = new ByteArrayInputStream(CertificatesToPlayWith.CONTAINING_JUST_EMAIL_IN_SAN);
+        final X509Certificate x509 = (X509Certificate) cf.generateCertificate(in);
+
+        Assert.assertEquals("CN=www.company.com, OU=MyDivision, O=MyCompany, L=SomeCity, ST=VA, C=US",
+            x509.getSubjectDN().getName());
+
+        impl.verify("www.company.com", x509);
+    }
 }
